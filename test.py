@@ -15,7 +15,7 @@ import os
 from featuremfcc import mfcc_feature
 
 
-nSpeaker = 24
+nSpeaker = 10
 nfiltbank = 13
 (codebooks_mfcc) = training(nfiltbank,nSpeaker)
 directory = os.getcwd() + '/test';
@@ -48,12 +48,13 @@ def compare_rating():
         (fs,s) = wavfile.read(directory + fname)
         mel_coefs = mfcc_feature(fs,s)
         sp_mfcc = minDistance(mel_coefs, codebooks_mfcc)
-        # print('Speaker ', (i+1), ' in test matches with speaker ', (sp_mfcc+1), ' in train for training with MFCC')
+        print('Speaker ', (i+1), ' in test matches with speaker ', (sp_mfcc+1), ' in train for training with MFCC')
         if i == sp_mfcc:
             nCorrect_MFCC += 1
             # print(i+1)
     percentageCorrect_MFCC = (nCorrect_MFCC/nSpeaker)*100
+    print(nCorrect_MFCC)
     print('Accuracy of result for training with MFCC is ', percentageCorrect_MFCC, '%')
 """bắt đầu nhận dạng"""
-predict(4)
+predict(15)
 compare_rating()
