@@ -1,9 +1,8 @@
 from __future__ import division
 import numpy as np
 from scipy.io import wavfile
-from scipy.io.wavfile import read
 from LBG import lbg
-from featuremfcc import mfcc_feature
+from process_mfcc import mfcc_feature
 import os
 
 

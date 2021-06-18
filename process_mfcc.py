@@ -1,5 +1,5 @@
 import numpy as np
-from python_speech_features import mfcc, logfbank
+from code_mfcc_feature import mfcc, logfbank
 import matplotlib.pyplot as plt
 
 def mfcc_feature(frequency_sampling, audio_signal):
