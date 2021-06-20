@@ -1,17 +1,15 @@
 from __future__ import division
 import numpy as np
-from scipy.io import wavfile
 from LBG import EUDistance
+from process_voice import readfile, show_mfcc
 from train import training
-import matplotlib.pyplot as plt
 import os
-from process_mfcc import mfcc_feature
 
 
-nSpeaker = 40
 nfiltbank = 13
-(codebooks_mfcc) = training(nfiltbank,nSpeaker)
-directory = os.getcwd() + '/test';
+directory = os.getcwd() + '/test/';
+(codebooks_mfcc) = training(nfiltbank)
+
 def minDistance(features, codebooks):
     speaker = 0
     distmin = np.inf
@@ -23,31 +21,28 @@ def minDistance(features, codebooks):
             speaker = k
     return speaker
 
-def predict(IdSpeaker):
-    frame = str()
-    fname = '/s' + str(IdSpeaker) + '.wav'
-    # print('Now speaker ', str(speakerN), 'features are being tested')
-    (fs, s) = wavfile.read(directory + fname)
-    mel_coefs = mfcc_feature(fs,s)
+def predict():
+    # Nhận dạng
+    file_input = input("Nhập tên file âm thanh cần nhận dạng: ")
+    mel_coefs = readfile(directory,file_input)
     sp_mfcc = minDistance(mel_coefs, codebooks_mfcc)
-    print('Speaker ', IdSpeaker, ' in test matches with speaker ', (sp_mfcc + 1), ' in train for training with MFCC')
-    plt.matshow(mel_coefs)
-    plt.title('MFCC input')
-    plt.show()
+    print('Speaker ', file_input, ' in test matches with speaker ', (sp_mfcc + 1), ' in train for training with MFCC')
+    # plt.matshow(mel_coefs)
+    # plt.title('MFCC input')
+    # plt.show()
+    show_mfcc(mel_coefs)
+
 def compare_rating():
+    nSpeaker = input('Nhập số lượng giọng nói cần nhận dạng: ')
     nCorrect_MFCC = 0
     for i in range(nSpeaker):
-        fname = '/s' + str(i+1) + '.wav'
-        (fs,s) = wavfile.read(directory + fname)
-        mel_coefs = mfcc_feature(fs,s)
+        fname = 's'+str(i+1)
+        mel_coefs = readfile(directory,fname)
         sp_mfcc = minDistance(mel_coefs, codebooks_mfcc)
+        print(mel_coefs.shape)
         print('Speaker ', (i+1), ' in test matches with speaker ', (sp_mfcc+1), ' in train for training with MFCC')
         if i == sp_mfcc:
             nCorrect_MFCC += 1
     percentageCorrect_MFCC = (nCorrect_MFCC/nSpeaker)*100
-    # print(nCorrect_MFCC)
     print('Accuracy of result for training with MFCC is ', percentageCorrect_MFCC, '%')
-"""bắt đầu nhận dạng"""
-# ip = input("Enter speaker name: ")
-# predict(ip)
-compare_rating()
+
